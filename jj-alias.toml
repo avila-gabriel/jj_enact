@@ -1,0 +1,19 @@
+[aliases]
+enact = [
+  "util", "exec", "--", "sh", "-c",
+  '''
+set -eu
+
+if [ "$#" -ne 1 ]; then
+  echo "usage: jj enact <message>" >&2
+  exit 2
+fi
+
+if [ "$(jj --color never log -r @ --no-graph -T empty)" = true ]; then
+  jj describe -m "$1"
+else
+  jj new -m "$1"
+fi
+''',
+  "",
+]

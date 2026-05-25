@@ -1,0 +1,32 @@
+---
+name: {{SKILL_NAME}}
+description: {{SKILL_DESCRIPTION}}
+---
+
+# {{SKILL_NAME}}
+
+{{TOOL_DESCRIPTION}}
+
+Use `jj {{JJ_ALIAS_NAME}}` as the required pre-edit task ledger for Codex work.
+
+Before changing files, Codex must call:
+
+```sh
+jj {{JJ_ALIAS_NAME}} $'<plan_summary>\n<plan>'
+```
+
+The message contains only:
+
+1. a short plan summary on the first line
+2. the plan body starting on the second line
+
+No `Codex:` prefix. No extra header required.
+
+The alias owns the VCS decision:
+
+- empty current change => describe it
+- non-empty current change => create a new change
+
+Codex should avoid Git staging checks and use jj-native commands for repo context. Codex must not mutate bookmarks, remotes, history, or shared VCS state unless explicitly requested.
+
+At the end of the task, summarize what changed, what checks were run, and any follow-up needed.
