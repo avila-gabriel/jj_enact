@@ -16,12 +16,9 @@ render_template() {
 
   awk \
     -v skill_name="$SKILL_NAME" \
-    -v skill_description="$SKILL_DESCRIPTION" \
     -v skill_purpose="$SKILL_PURPOSE" \
-    -v tool_description="$TOOL_DESCRIPTION" \
     -v jj_alias_name="$JJ_ALIAS_NAME" \
     -v jj_alias_toml="$JJ_ALIAS_TOML" \
-    -v critical_constraint="${CRITICAL_CONSTRAINT:-}" \
     '
     function replace_all(value, needle, replacement, output, index_) {
       output = ""
@@ -35,12 +32,9 @@ render_template() {
     {
       line = $0
       line = replace_all(line, "{{SKILL_NAME}}", skill_name)
-      line = replace_all(line, "{{SKILL_DESCRIPTION}}", skill_description)
       line = replace_all(line, "{{SKILL_PURPOSE}}", skill_purpose)
-      line = replace_all(line, "{{TOOL_DESCRIPTION}}", tool_description)
       line = replace_all(line, "{{JJ_ALIAS_NAME}}", jj_alias_name)
       line = replace_all(line, "{{JJ_ALIAS_TOML}}", jj_alias_toml)
-      line = replace_all(line, "{{CRITICAL_CONSTRAINT}}", critical_constraint)
       print line
     }
     ' "$source_file" > "$target_file"
@@ -68,14 +62,11 @@ if [ ! -f "$source_dir/SKILL.md.template" ]; then
 fi
 
 SKILL_NAME="${SKILL_NAME:-$slug}"
-SKILL_DESCRIPTION="${SKILL_DESCRIPTION:-}"
 SKILL_PURPOSE="${SKILL_PURPOSE:-}"
-TOOL_DESCRIPTION="${TOOL_DESCRIPTION:-}"
 JJ_ALIAS_NAME="${JJ_ALIAS_NAME:-}"
 JJ_ALIAS_TOML="${JJ_ALIAS_TOML:-}"
-CRITICAL_CONSTRAINT="${CRITICAL_CONSTRAINT:-}"
 
-for required in SKILL_DESCRIPTION SKILL_PURPOSE TOOL_DESCRIPTION JJ_ALIAS_NAME JJ_ALIAS_TOML; do
+for required in SKILL_PURPOSE JJ_ALIAS_NAME JJ_ALIAS_TOML; do
   eval "value=\${$required}"
   if [ -z "$value" ]; then
     echo "error: missing $required" >&2

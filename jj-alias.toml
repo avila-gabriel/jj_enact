@@ -9,10 +9,14 @@ if [ "$#" -ne 1 ]; then
   exit 2
 fi
 
+goal=$(printf '%s\n' "$1" | sed -n '1p')
+plan=$(printf '%s\n' "$1" | sed '1d')
+message=$(printf '%s\n\n## Plan\n%s' "$goal" "$plan")
+
 if [ "$(jj --color never log -r @ --no-graph -T empty)" = true ]; then
-  jj describe -m "$1"
+  jj describe -m "$message"
 else
-  jj new -m "$1"
+  jj new -m "$message"
 fi
 ''',
   "",

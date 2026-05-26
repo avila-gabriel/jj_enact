@@ -21,9 +21,7 @@ required_vars="
 JJ_ALIAS_NAME
 JJ_ALIAS_CONFIG_FILE
 SKILL_NAME
-SKILL_DESCRIPTION
 SKILL_PURPOSE
-TOOL_DESCRIPTION
 "
 
 for var_name in $required_vars; do
@@ -81,9 +79,17 @@ XDG_CONFIG_HOME="$tmp_dir/config" jj config get "aliases.$JJ_ALIAS_NAME" >/dev/n
 
 if [ "$JJ_ALIAS_NAME" = "enact" ]; then
   repo_dir="$tmp_dir/enact-repo"
-  first_message="Plan one
+  first_input="Plan one
 Body one"
+  first_message="Plan one
+
+## Plan
+Body one"
+  second_input="Plan two
+Body two"
   second_message="Plan two
+
+## Plan
 Body two"
 
   (
@@ -97,7 +103,7 @@ Body two"
   (
     cd "$repo_dir"
 
-    XDG_CONFIG_HOME="$tmp_dir/config" jj "$JJ_ALIAS_NAME" "$first_message" >/dev/null
+    XDG_CONFIG_HOME="$tmp_dir/config" jj "$JJ_ALIAS_NAME" "$first_input" >/dev/null
     actual_first=$(
       XDG_CONFIG_HOME="$tmp_dir/config" jj log -r @ --no-graph --color never -T description
     )
@@ -109,7 +115,7 @@ Body two"
 
     printf '%s\n' "content" >file.txt
 
-    XDG_CONFIG_HOME="$tmp_dir/config" jj "$JJ_ALIAS_NAME" "$second_message" >/dev/null
+    XDG_CONFIG_HOME="$tmp_dir/config" jj "$JJ_ALIAS_NAME" "$second_input" >/dev/null
     actual_second=$(
       XDG_CONFIG_HOME="$tmp_dir/config" jj log -r @ --no-graph --color never -T description
     )
